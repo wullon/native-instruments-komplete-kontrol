@@ -54,11 +54,8 @@ function init()
    cTrack = host.createCursorTrack(6, 0);
    cDevice = cTrack.getPrimaryDevice();
    tracks = host.createTrackBank(8, 0, 0);
-   for (var i = 0; i < 8; i++) {
-      tracks.getTrack(i).getVolume().setIndication(true);
-      cDevice.getMacro(i).getAmount().setIndication(true);
 
-   }
+   setIndications();
 
    // Observer:
    transport.addIsPlayingObserver(function(on) {
@@ -106,11 +103,36 @@ function onMidi(status, data1, data2)
          inc = -(128 - data2);
       }
       if (data1 >= 14 && data1 < 22) {
-         switch (KK.mode) {
-            case 0:
-               tracks.getTrack(data1-14).getVolume().inc(inc, 255);
-               break;
+         if (KK.mode != 0) {
+            KK.mode = 0;
+            setIndications();
+            host.showPopupNotification(KK.modeName[KK.mode]);
          }
+         tracks.getTrack(data1-14).getVolume().inc(inc, 255);
+      }
+      else if (data1 >= 22 && data1 < 30) {
+         if (KK.mode != 1) {
+            KK.mode = 1;
+            setIndications();
+            host.showPopupNotification(KK.modeName[KK.mode]);
+         }
+         if (data1 === 22) {
+            cTrack.getVolume().inc(inc, 255);
+         }
+         else if (data1 === 23) {
+            cTrack.getPan().inc(inc, 255);
+         }
+         else {
+            cTrack.getSend(data1-24).inc(inc, 255);
+         }
+      }
+      else if (data1 >= 30 && data1 < 38) {
+         if (KK.mode != 2) {
+            KK.mode = 2;
+            setIndications();
+            host.showPopupNotification(KK.modeName[KK.mode]);
+         }
+         cDevice.getMacro(data1-30).getAmount().inc(inc, 255);
       }
    }
 }
@@ -118,7 +140,6 @@ function onMidi1(status, data1, data2)
 {
    println("Midi 1")
    printMidi(status, data1, data2);
-
 }
 
 function onMidi2(status, data1, data2) {
@@ -131,7 +152,6 @@ function onMidi2(status, data1, data2) {
          switch(data1) {
             case KK.play:
                transport.play();
-               host.getMidiOutPort(2).sendMidi(status, data1, 127);
                break;
             case KK.stop:
                KK.stopTime = true;
@@ -145,6 +165,7 @@ function onMidi2(status, data1, data2) {
                if (KK.pressed) {
                   KK.mode = (KK.mode + 1) % 3;
                   host.showPopupNotification(KK.modeName[KK.mode]);
+                  setIndications();
                }
                else {
                   transport.toggleLoop();
@@ -236,8 +257,15 @@ function setIndications () {
          break;
    }
    for (var i = 0; i < 8; i++) {
-      
+      tracks.getTrack(i).getVolume().setIndication(mix);
+      cDevice.getMacro(i).getAmount().setIndication(device);
    }
+   cTrack.getVolume().setIndication(track);
+   cTrack.getPan().setIndication(track);
+   for (var j = 0; j < 6; j++) {
+      cTrack.getSend(j).setIndication(track);
+   }
+
 }
 
 function onSysex(data) {

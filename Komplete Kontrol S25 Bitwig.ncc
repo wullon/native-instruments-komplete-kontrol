@@ -96,8 +96,8 @@
 
   <controller port="internal" type="Komplete Kontrol S - 1">
     <wrapmode>0</wrapmode>
-    <current_index>1</current_index>
-    <midi-map name="Template 1" type="KompleteKontrol">
+    <current_index>2</current_index>
+    <midi-map name="Mix" type="KompleteKontrol">
       <wrapmode>0</wrapmode>
       <controls>
         <button id="ButtonArp">
@@ -203,9 +203,10 @@
       </controls>
       <KnobsPages>
         <current_index>0</current_index>
-        <KnobsPage name="Default">
+        <KnobsPage name="Bitwig">
           <knob id="EndlessKnob1">
-            <controller>14</controller>
+            <name>Volume</name>
+            <controller mode="comp">14</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -216,7 +217,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob2">
-            <controller>15</controller>
+            <name>Volume</name>
+            <controller mode="comp">15</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -227,7 +229,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob3">
-            <controller>16</controller>
+            <name>Volume</name>
+            <controller mode="comp">16</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -238,7 +241,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob4">
-            <controller>17</controller>
+            <name>Volume</name>
+            <controller mode="comp">17</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -249,7 +253,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob5">
-            <controller>18</controller>
+            <name>Volume</name>
+            <controller mode="comp">18</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -260,7 +265,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob6">
-            <controller>19</controller>
+            <name>Volume</name>
+            <controller mode="comp">19</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -271,7 +277,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob7">
-            <controller>20</controller>
+            <name>Volume</name>
+            <controller mode="comp">20</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -282,7 +289,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob8">
-            <controller>21</controller>
+            <name>Volume</name>
+            <controller mode="comp">21</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -300,16 +308,17 @@
           <upperKey>127</upperKey>
           <velocityCurve>3</velocityCurve>
           <transpose>0</transpose>
-          <color-index>9</color-index>
+          <color-index>2</color-index>
           <channel>0</channel>
           <ledMode>3</ledMode>
         </KeyZone>
       </KeyZones>
     </midi-map>
-    <midi-map name="Bitwig Studio" type="KompleteKontrol">
+    <midi-map name="Track" type="KompleteKontrol">
       <wrapmode>0</wrapmode>
       <controls>
         <button id="ButtonArp">
+          <disabled/>
           <controller>46</controller>
           <channel>0</channel>
           <off>0</off>
@@ -319,6 +328,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="ButtonKeys">
+          <disabled/>
           <controller>45</controller>
           <channel>0</channel>
           <off>0</off>
@@ -410,9 +420,10 @@
       </controls>
       <KnobsPages>
         <current_index>0</current_index>
-        <KnobsPage name="Mixer">
+        <KnobsPage name="Bitwig">
           <knob id="EndlessKnob1">
-            <controller mode="comp">14</controller>
+            <name>Volume</name>
+            <controller mode="comp">22</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -423,7 +434,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob2">
-            <controller mode="comp">15</controller>
+            <name>Pan</name>
+            <controller mode="comp">23</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -434,7 +446,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob3">
-            <controller mode="comp">16</controller>
+            <name>Send_1</name>
+            <controller mode="comp">24</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -445,7 +458,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob4">
-            <controller mode="comp">17</controller>
+            <name>Send_2</name>
+            <controller mode="comp">25</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -456,7 +470,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob5">
-            <controller mode="comp">18</controller>
+            <name>Send_3</name>
+            <controller mode="comp">26</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -467,7 +482,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob6">
-            <controller mode="comp">19</controller>
+            <name>Send_4</name>
+            <controller mode="comp">27</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -478,7 +494,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob7">
-            <controller mode="comp">20</controller>
+            <name>Send_5</name>
+            <controller mode="comp">28</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -489,7 +506,8 @@
             <bipolar>off</bipolar>
           </knob>
           <knob id="EndlessKnob8">
-            <controller mode="comp">21</controller>
+            <name>Send_6</name>
+            <controller mode="comp">29</controller>
             <channel>0</channel>
             <min>0</min>
             <max>127</max>
@@ -513,15 +531,11 @@
         </KeyZone>
       </KeyZones>
     </midi-map>
-  </controller>
-
-  <controller port="internal" type="Komplete Kontrol S - 2">
-    <wrapmode>0</wrapmode>
-    <current_index>0</current_index>
-    <midi-map name="Template 1" type="KompleteKontrol">
+    <midi-map name="Device" type="KompleteKontrol">
       <wrapmode>0</wrapmode>
       <controls>
         <button id="ButtonArp">
+          <disabled/>
           <controller>46</controller>
           <channel>0</channel>
           <off>0</off>
@@ -531,6 +545,229 @@
           <reaction>ondown</reaction>
         </button>
         <button id="ButtonKeys">
+          <disabled/>
+          <controller>45</controller>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">toggle</behavior>
+          <reaction>ondown</reaction>
+        </button>
+        <button id="ButtonTstLeft">
+          <note>0</note>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">gate</behavior>
+          <reaction>ondown</reaction>
+        </button>
+        <button id="ButtonTstRight">
+          <note>1</note>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">gate</behavior>
+          <reaction>ondown</reaction>
+        </button>
+        <footswitch id="FSwRing">
+          <controller>65</controller>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">gate</behavior>
+          <reaction>ondown</reaction>
+        </footswitch>
+        <footswitch id="FSwTip">
+          <controller>64</controller>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">gate</behavior>
+          <reaction>ondown</reaction>
+        </footswitch>
+        <pedal id="Pedal">
+          <controller>11</controller>
+          <channel>0</channel>
+          <min>0</min>
+          <max>127</max>
+          <default>0</default>
+          <last>0</last>
+        </pedal>
+        <touchstrip id="TouchstripTstLeft">
+          <range>360</range>
+          <steps>20</steps>
+          <TouchstripMode>1</TouchstripMode>
+          <TouchstripWalls>1</TouchstripWalls>
+          <TouchstripGravity>13</TouchstripGravity>
+          <TouchstripFriction>6</TouchstripFriction>
+          <TouchstripSpringStrength>3</TouchstripSpringStrength>
+          <TouchstripLedMode>0</TouchstripLedMode>
+          <TouchstripSteps>3</TouchstripSteps>
+          <TouchstripDisplay>1</TouchstripDisplay>
+          <pitchbend/>
+          <channel>0</channel>
+          <min>0</min>
+          <max>16383</max>
+          <default>8192</default>
+          <last>0</last>
+        </touchstrip>
+        <touchstrip id="TouchstripTstRight">
+          <range>360</range>
+          <steps>20</steps>
+          <TouchstripMode>0</TouchstripMode>
+          <TouchstripWalls>1</TouchstripWalls>
+          <TouchstripGravity>13</TouchstripGravity>
+          <TouchstripFriction>6</TouchstripFriction>
+          <TouchstripSpringStrength>3</TouchstripSpringStrength>
+          <TouchstripLedMode>0</TouchstripLedMode>
+          <TouchstripSteps>3</TouchstripSteps>
+          <TouchstripDisplay>0</TouchstripDisplay>
+          <controller>1</controller>
+          <channel>0</channel>
+          <min>0</min>
+          <max>127</max>
+          <default>0</default>
+          <last>0</last>
+        </touchstrip>
+      </controls>
+      <KnobsPages>
+        <current_index>0</current_index>
+        <KnobsPage name="Bitwig">
+          <knob id="EndlessKnob1">
+            <name>Macro_1</name>
+            <controller mode="comp">30</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob2">
+            <name>Macro_2</name>
+            <controller mode="comp">31</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob3">
+            <name>Macro_3</name>
+            <controller mode="comp">32</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob4">
+            <name>Macro_4</name>
+            <controller mode="comp">33</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob5">
+            <name>Macro_5</name>
+            <controller mode="comp">34</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob6">
+            <name>Macro_6</name>
+            <controller mode="comp">35</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob7">
+            <name>Macro_7</name>
+            <controller mode="comp">36</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+          <knob id="EndlessKnob8">
+            <name>Macro_8</name>
+            <controller mode="comp">37</controller>
+            <channel>0</channel>
+            <min>0</min>
+            <max>127</max>
+            <default>0</default>
+            <last>0</last>
+            <range>360</range>
+            <steps>20</steps>
+            <bipolar>off</bipolar>
+          </knob>
+        </KnobsPage>
+      </KnobsPages>
+      <KeyZones>
+        <KeyZone id="Key Zone 1">
+          <lowerKey>0</lowerKey>
+          <upperKey>127</upperKey>
+          <velocityCurve>3</velocityCurve>
+          <transpose>0</transpose>
+          <color-index>0</color-index>
+          <channel>0</channel>
+          <ledMode>3</ledMode>
+        </KeyZone>
+      </KeyZones>
+    </midi-map>
+  </controller>
+
+  <controller port="internal" type="Komplete Kontrol S - 2">
+    <wrapmode>0</wrapmode>
+    <current_index>0</current_index>
+    <midi-map name="Template 1" type="KompleteKontrol">
+      <wrapmode>0</wrapmode>
+      <controls>
+        <button id="ButtonArp">
+          <disabled/>
+          <controller>46</controller>
+          <channel>0</channel>
+          <off>0</off>
+          <on>127</on>
+          <last>0</last>
+          <behavior onIfDown="on">toggle</behavior>
+          <reaction>ondown</reaction>
+        </button>
+        <button id="ButtonKeys">
+          <disabled/>
           <controller>45</controller>
           <channel>0</channel>
           <off>0</off>
@@ -734,6 +971,7 @@
       <wrapmode>0</wrapmode>
       <controls>
         <button id="ButtonArp">
+          <disabled/>
           <controller>46</controller>
           <channel>0</channel>
           <off>0</off>
@@ -743,6 +981,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="ButtonKeys">
+          <disabled/>
           <controller>45</controller>
           <channel>0</channel>
           <off>0</off>
@@ -946,6 +1185,7 @@
       <wrapmode>0</wrapmode>
       <controls>
         <button id="ButtonArp">
+          <disabled/>
           <controller>46</controller>
           <channel>0</channel>
           <off>0</off>
@@ -955,6 +1195,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="ButtonKeys">
+          <disabled/>
           <controller>45</controller>
           <channel>0</channel>
           <off>0</off>
