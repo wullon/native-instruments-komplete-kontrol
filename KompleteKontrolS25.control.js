@@ -35,6 +35,7 @@ function init()
    KK.note.setShouldConsumeEvents(false);
    KK.note.assignPolyphonicAftertouchToExpression(0, NoteExpression.TIMBRE_UP, 2)
 
+   host.getMidiOutPort(0).setShouldSendMidiBeatClock(true);
    host.getMidiInPort(0).setMidiCallback(onMidi);
    host.getMidiInPort(0).setSysexCallback(onSysex);
    host.getMidiInPort(1).setMidiCallback(onMidi1);
@@ -90,8 +91,8 @@ function init()
 
 function onMidi(status, data1, data2)
 {
-   println("Midi 0")
-   printMidi(status, data1, data2);
+   //println("Midi 0")
+   //printMidi(status, data1, data2);
 
    if (isChannelController(status))
    {
@@ -138,13 +139,13 @@ function onMidi(status, data1, data2)
 }
 function onMidi1(status, data1, data2)
 {
-   println("Midi 1")
-   printMidi(status, data1, data2);
+   //println("Midi 1")
+   //printMidi(status, data1, data2);
 }
 
 function onMidi2(status, data1, data2) {
-   println("Midi 2")
-   printMidi(status, data1, data2);
+   //println("Midi 2")
+   //printMidi(status, data1, data2);
 
    if (isNoteOn(status)) {
       if (data2 > 64) {
@@ -269,16 +270,16 @@ function setIndications () {
 }
 
 function onSysex(data) {
-   println("Sysex0")
-   printSysex(data);
+   //println("Sysex0")
+   //printSysex(data);
 }
 function onSysex1(data) {
-   println("Sysex1")
-   printSysex(data);
+   //println("Sysex1")
+   //printSysex(data);
 }
 function onSysex2(data) {
-   println("Sysex2")
-   printSysex(data);
+   //println("Sysex2")
+   //printSysex(data);
 }
 function exit()
 {
