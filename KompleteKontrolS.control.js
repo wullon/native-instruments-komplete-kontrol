@@ -1,37 +1,40 @@
-// Native Instruments Komplete Kontrol S25
+// Native Instruments Komplete Kontrol S
 
 loadAPI(1);
 
-host.defineController("Native Instruments", "Komplete Kontrol S25", "1.0", "c196a280-50a8-11e4-916c-0800200c9a66");
+host.defineController("Native Instruments", "Komplete Kontrol S", "1.0", "c196a280-50a8-11e4-916c-0800200c9a66");
 host.defineMidiPorts(3, 3);
-host.addDeviceNameBasedDiscoveryPair(["Komplete Kontrol- 1", "Komplete Kontrol EXT- 1", "Komplete Kontrol DAW-1"], ["Komplete Kontrol-1", "Komplete Kontrol EXT-1", "Komplete Kontrol DAW-1"]);
+host.addDeviceNameBasedDiscoveryPair(["Komplete Kontrol-1", "Komplete Kontrol EXT-1", "Komplete Kontrol DAW-1"], ["Komplete Kontrol-1", "Komplete Kontrol EXT-1", "Komplete Kontrol DAW-1"]);
 
 var LOWEST_CC = 1;
 var HIGHEST_CC = 119;
 
 var KK = {
-play : 94,
-stop : 93,
-rec : 95,
-loop : 86,
-rwd : 91,
-ffw : 92,
-pressed : false
+   play : 94,
+   stop : 93,
+   rec : 95,
+   loop : 86,
+   rwd : 91,
+   ffw : 92,
+   pressed : false,
+   isPlaying : false,
+   isRecording : false,
+   isLoop : false,
+   stopTime : false,
+   modeName : ["Mix", "Track", "Device"],
+   mode : 0,
+   transport : null,
+   cTrack : null,
+   cDevice : null,
+   tracks : null
 };
 
-KK.isPlaying = false;
-KK.isRecording = false;
-KK.isLoop = false;
-KK.stopTime = false;
-KK.modeName = ["Mix", "Track", "Device"];
-KK.mode = 0;
-
-KK.trackHasChanged = false;
-KK.deviceHasChanged = false;
+//KK.trackHasChanged = false;
+//KK.deviceHasChanged = false;
 
 function init()
 {
-   KK.note = host.getMidiInPort(0).createNoteInput("NI Komplete Kontrol", "??????");
+   KK.note = host.getMidiInPort(0).createNoteInput("Keys", "??????");
    KK.note.setShouldConsumeEvents(false);
    KK.note.assignPolyphonicAftertouchToExpression(0, NoteExpression.TIMBRE_UP, 2)
 
@@ -43,6 +46,18 @@ function init()
    host.getMidiInPort(2).setMidiCallback(onMidi2);
    host.getMidiInPort(2).setSysexCallback(onSysex2);
 
+   notif = host.getNotificationSettings();
+
+   notif.setShouldShowChannelSelectionNotifications(true);
+   notif.setShouldShowDeviceLayerSelectionNotifications(true);
+   notif.setShouldShowDeviceSelectionNotifications(true);
+   notif.setShouldShowMappingNotifications(true);
+   notif.setShouldShowPresetNotifications(true);
+   notif.setShouldShowSelectionNotifications(true);
+   notif.setShouldShowTrackSelectionNotifications(true);
+   notif.setShouldShowValueNotifications(true);
+
+
    // Make CCs freely mappable
    userControls = host.createUserControlsSection(HIGHEST_CC - LOWEST_CC + 1);
 
@@ -51,40 +66,40 @@ function init()
       userControls.getControl(i - LOWEST_CC).setLabel("CC" + i);
    }
 
-   transport = host.createTransport();
-   cTrack = host.createCursorTrack(6, 0);
-   cDevice = cTrack.getPrimaryDevice();
-   tracks = host.createTrackBank(8, 0, 0);
+   KK.transport = host.createTransport();
+   KK.cTrack = host.createCursorTrack(6, 0);
+   KK.cDevice = KK.cTrack.getPrimaryDevice();
+   KK.tracks = host.createTrackBank(8, 0, 0);
 
    setIndications();
 
    // Observer:
-   transport.addIsPlayingObserver(function(on) {
+   KK.transport.addIsPlayingObserver(function(on) {
       KK.isPlaying = on;
       host.getMidiOutPort(2).sendMidi(144, KK.play, on ? 127 : 0);
       host.getMidiOutPort(2).sendMidi(144, KK.stop, on ? 0 : 127);
    });
-   transport.addIsRecordingObserver(function(on) {
+   KK.transport.addIsRecordingObserver(function(on) {
       KK.isRecording = on;
       host.getMidiOutPort(2).sendMidi(144, KK.rec, on ? 127 : 0);
    });
-   transport.addIsLoopActiveObserver(function(on) {
+   KK.transport.addIsLoopActiveObserver(function(on) {
       KK.isLoop = on;
       host.getMidiOutPort(2).sendMidi(144, KK.loop, on ? 127 : 0);
    });
 
-   cTrack.addNameObserver(50, "None", function(name) {
-      if (KK.trackHasChanged) {
-         host.showPopupNotification("Track: " + name);
-         KK.trackHasChanged = false;
-      }
-   })
-   cDevice.addNameObserver(50, "None", function(name) {
-      if (KK.deviceHasChanged) {
-         host.showPopupNotification("Device: " + name);
-         KK.deviceHasChanged = false;
-      }
-   })
+   //cTrack.addNameObserver(50, "None", function(name) {
+   //   if (KK.trackHasChanged) {
+   //      host.showPopupNotification("Track: " + name);
+   //      KK.trackHasChanged = false;
+   //   }
+   //})
+   //cDevice.addNameObserver(50, "None", function(name) {
+   //   if (KK.deviceHasChanged) {
+   //      host.showPopupNotification("Device: " + name);
+   //      KK.deviceHasChanged = false;
+   //   }
+   //})
 }
 
 
@@ -104,36 +119,26 @@ function onMidi(status, data1, data2)
          inc = -(128 - data2);
       }
       if (data1 >= 14 && data1 < 22) {
-         if (KK.mode != 0) {
-            KK.mode = 0;
-            setIndications();
-            host.showPopupNotification(KK.modeName[KK.mode]);
+         switch (KK.mode) {
+            case 0:
+               KK.tracks.getTrack(data1-14).getVolume().inc(inc, 255);
+               break;
+            case 1:
+               if (data1 === 14) {
+                  KK.cTrack.getVolume().inc(inc, 255);
+               }
+               else if (data1 === 15) {
+                  KK.cTrack.getPan().inc(inc, 255);
+               }
+               else {
+                  KK.cTrack.getSend(data1-16).inc(inc, 255);
+               }
+               break;
+            case 2:
+               KK.cDevice.getMacro(data1-14).getAmount().inc(inc, 255);
+               break;
+
          }
-         tracks.getTrack(data1-14).getVolume().inc(inc, 255);
-      }
-      else if (data1 >= 22 && data1 < 30) {
-         if (KK.mode != 1) {
-            KK.mode = 1;
-            setIndications();
-            host.showPopupNotification(KK.modeName[KK.mode]);
-         }
-         if (data1 === 22) {
-            cTrack.getVolume().inc(inc, 255);
-         }
-         else if (data1 === 23) {
-            cTrack.getPan().inc(inc, 255);
-         }
-         else {
-            cTrack.getSend(data1-24).inc(inc, 255);
-         }
-      }
-      else if (data1 >= 30 && data1 < 38) {
-         if (KK.mode != 2) {
-            KK.mode = 2;
-            setIndications();
-            host.showPopupNotification(KK.modeName[KK.mode]);
-         }
-         cDevice.getMacro(data1-30).getAmount().inc(inc, 255);
       }
    }
 }
@@ -152,7 +157,7 @@ function onMidi2(status, data1, data2) {
          //code
          switch(data1) {
             case KK.play:
-               transport.play();
+               KK.transport.play();
                break;
             case KK.stop:
                KK.stopTime = true;
@@ -160,7 +165,7 @@ function onMidi2(status, data1, data2) {
                host.scheduleTask(setStopTimer, null, 400);
                break;
             case KK.rec:
-               transport.record()
+               KK.transport.record()
                break;
             case KK.loop:
                if (KK.pressed) {
@@ -169,47 +174,47 @@ function onMidi2(status, data1, data2) {
                   setIndications();
                }
                else {
-                  transport.toggleLoop();
+                  KK.transport.toggleLoop();
                }
                break;
             case KK.ffw:
                if (KK.pressed) {
                   switch (KK.mode) {
                      case 0:
-                        tracks.scrollTracksDown();
+                        KK.tracks.scrollTracksDown();
                         break;
                      case 1:
                         KK.trackHasChanged = true;
-                        cTrack.selectNext();
+                        KK.cTrack.selectNext();
                         break;
                      case 2:
                         KK.deviceHasChanged = true;
-                        cDevice.switchToDevice(DeviceType.ANY,ChainLocation.NEXT);
+                        KK.cDevice.switchToDevice(DeviceType.ANY,ChainLocation.NEXT);
                         break;
                   }
                }
                else {
-                  transport.fastForward();
+                  KK.transport.fastForward();
                }
                break;
             case KK.rwd:
                if (KK.pressed) {
                   switch (KK.mode) {
                      case 0:
-                        tracks.scrollTracksUp();
+                        KK.tracks.scrollTracksUp();
                         break;
                      case 1:
                         KK.trackHasChanged = true;
-                        cTrack.selectPrevious();
+                        KK.cTrack.selectPrevious();
                         break;
                      case 2:
                         KK.deviceHasChanged = true;
-                        cDevice.switchToDevice(DeviceType.ANY,ChainLocation.PREVIOUS);
+                        KK.cDevice.switchToDevice(DeviceType.ANY,ChainLocation.PREVIOUS);
                         break;
                   }
                }
                else {
-                  transport.rewind();
+                  KK.transport.rewind();
                }
                break;
          }
@@ -220,7 +225,7 @@ function onMidi2(status, data1, data2) {
                break;
             case KK.stop:
                if (KK.stopTime) {
-                  transport.stop();
+                  KK.transport.stop();
                }
                KK.pressed = false;
                break;
@@ -258,13 +263,13 @@ function setIndications () {
          break;
    }
    for (var i = 0; i < 8; i++) {
-      tracks.getTrack(i).getVolume().setIndication(mix);
-      cDevice.getMacro(i).getAmount().setIndication(device);
+      KK.tracks.getTrack(i).getVolume().setIndication(mix);
+      KK.cDevice.getMacro(i).getAmount().setIndication(device);
    }
-   cTrack.getVolume().setIndication(track);
-   cTrack.getPan().setIndication(track);
+   KK.cTrack.getVolume().setIndication(track);
+   KK.cTrack.getPan().setIndication(track);
    for (var j = 0; j < 6; j++) {
-      cTrack.getSend(j).setIndication(track);
+      KK.cTrack.getSend(j).setIndication(track);
    }
 
 }
