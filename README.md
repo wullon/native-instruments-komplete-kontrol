@@ -1,13 +1,13 @@
 Native-Instruments Komplete Kontrol
 ==================================
 
-Initial support for Native Instruments Komplete Kontrol S25 Controller in Bitwig Studio
+Basic support for Native Instruments Komplete Kontrol S Controllers in Bitwig Studio.
 
 Installation:
 
-Load the "Komplete Kontrol S25 Bitwig.ncc" into the Native Instruments Controller Editor and sync with your keyboard.
+Load the "Komplete Kontrol S Bitwig.ncc" into the Native Instruments Controller Editor and sync with your keyboard.
 
-Install the file "KompleteKontrolS25.control.js" into your user directory/Documents/Bitwig Studio/Controller Scripts/Native Instruments
+Install the file "KompleteKontrolS.control.js" into your user directory/Documents/Bitwig Studio/Controller Scripts/Native Instruments
 
 Functions:
 
@@ -26,4 +26,9 @@ In "Mix" mode you can move the track bank up and down.
 In "Track" mode you move the track selection up and down.
 In "Device" mode you select the cursor decice.
 
-The reason for this slightly convoluted structure is, that the controller doesn't send anything to Bitwig Studio when you select a different Preset. Only after a knob is moved, Bitwig knows which mode it is in. Since you may not always want to wiggle a know to let Bitwig knob, there is the alternate mode with the stop and loop buttons combined.
+Known Issues:
+- Autodetection does not work so far for unclear reasons.
+- You need to manually install the controller and select the three inputs and outputs in the order they show up in the dropdowns.
+- The script does currently not work on Linux as far as we know.
+- If you use the Komplete Kontrol VST, you need to switch between the different instances of the plugin with the "INSTANCE" button on the controller.
+- To switch to above mentioned Bitwig Studio functions, you need to switch to "Midi" with the "INSTANCE" button.
