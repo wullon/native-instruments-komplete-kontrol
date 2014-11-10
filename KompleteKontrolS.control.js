@@ -4,7 +4,7 @@ loadAPI(1);
 
 host.defineController("Native Instruments", "Komplete Kontrol S", "1.0", "c196a280-50a8-11e4-916c-0800200c9a66");
 host.defineMidiPorts(3, 3);
-host.addDeviceNameBasedDiscoveryPair(["Komplete Kontrol-1", "Komplete Kontrol EXT-1", "Komplete Kontrol DAW-1"], ["Komplete Kontrol-1", "Komplete Kontrol EXT-1", "Komplete Kontrol DAW-1"]);
+host.addDeviceNameBasedDiscoveryPair(["Komplete Kontrol - 1", "Komplete Kontrol EXT - 1", "Komplete Kontrol DAW - 1"], ["Komplete Kontrol - 1", "Komplete Kontrol EXT - 1", "Komplete Kontrol DAW - 1"]);
 
 var LOWEST_CC = 1;
 var HIGHEST_CC = 119;
@@ -21,8 +21,9 @@ var KK = {
    isRecording : false,
    isLoop : false,
    stopTime : false,
-   modeName : ["Mix", "Track", "Device"],
+   modeName : ["Mix", "Track", "Device", "User"],
    mode : 0,
+   userMode : 0,
    transport : null,
    cTrack : null,
    cDevice : null,
@@ -70,6 +71,11 @@ function init()
    KK.cTrack = host.createCursorTrack(6, 0);
    KK.cDevice = KK.cTrack.getPrimaryDevice();
    KK.tracks = host.createTrackBank(8, 0, 0);
+   KK.user = host.createUserControls(16);
+
+   for (var i = 0; i < 16; i++) {
+      KK.user.getControl(i).setLabel("User " + i);
+   }
 
    setIndications();
 
@@ -87,21 +93,7 @@ function init()
       KK.isLoop = on;
       host.getMidiOutPort(2).sendMidi(144, KK.loop, on ? 127 : 0);
    });
-
-   //cTrack.addNameObserver(50, "None", function(name) {
-   //   if (KK.trackHasChanged) {
-   //      host.showPopupNotification("Track: " + name);
-   //      KK.trackHasChanged = false;
-   //   }
-   //})
-   //cDevice.addNameObserver(50, "None", function(name) {
-   //   if (KK.deviceHasChanged) {
-   //      host.showPopupNotification("Device: " + name);
-   //      KK.deviceHasChanged = false;
-   //   }
-   //})
 }
-
 
 
 function onMidi(status, data1, data2)
@@ -121,7 +113,7 @@ function onMidi(status, data1, data2)
       if (data1 >= 14 && data1 < 22) {
          switch (KK.mode) {
             case 0:
-               KK.tracks.getTrack(data1-14).getVolume().inc(inc, 255);
+               KK.tracks.getTrack(data1 - 14).getVolume().inc(inc, 255);
                break;
             case 1:
                if (data1 === 14) {
@@ -131,17 +123,26 @@ function onMidi(status, data1, data2)
                   KK.cTrack.getPan().inc(inc, 255);
                }
                else {
-                  KK.cTrack.getSend(data1-16).inc(inc, 255);
+                  KK.cTrack.getSend(data1 - 16).inc(inc, 255);
                }
                break;
             case 2:
-               KK.cDevice.getMacro(data1-14).getAmount().inc(inc, 255);
+               KK.cDevice.getMacro(data1 - 14).getAmount().inc(inc, 255);
+               break;
+            case 3:
+               if(KK.userMode === 0) {
+                  KK.user.getControl(data1 - 14).inc(inc, 128);
+               }
+               else if(KK.userMode === 1) {
+                  KK.user.getControl(data1 - 14 + 8).inc(inc, 128);
+               }
                break;
 
          }
       }
    }
 }
+
 function onMidi1(status, data1, data2)
 {
    //println("Midi 1")
@@ -169,8 +170,8 @@ function onMidi2(status, data1, data2) {
                break;
             case KK.loop:
                if (KK.pressed) {
-                  KK.mode = (KK.mode + 1) % 3;
-                  host.showPopupNotification(KK.modeName[KK.mode]);
+                  KK.mode = (KK.mode + 1) % 4;
+                  host.showPopupNotification(KK.modeName[KK.mode] + " Mode");
                   setIndications();
                }
                else {
@@ -191,6 +192,10 @@ function onMidi2(status, data1, data2) {
                         KK.deviceHasChanged = true;
                         KK.cDevice.switchToDevice(DeviceType.ANY,ChainLocation.NEXT);
                         break;
+                     case 3:
+                        KK.userMode = 1;
+                        host.showPopupNotification("User Bank 2");
+                        break;
                   }
                }
                else {
@@ -210,6 +215,10 @@ function onMidi2(status, data1, data2) {
                      case 2:
                         KK.deviceHasChanged = true;
                         KK.cDevice.switchToDevice(DeviceType.ANY,ChainLocation.PREVIOUS);
+                        break;
+                     case 3:
+                        KK.userMode = 0;
+                        host.showPopupNotification("User Bank 1");
                         break;
                   }
                }
@@ -244,13 +253,14 @@ function onMidi2(status, data1, data2) {
 
 function setStopTimer () {
    KK.stopTime = false;
-   host.showPopupNotification(KK.modeName[KK.mode]);
+   host.showPopupNotification(KK.modeName[KK.mode] + " Mode");
 }
 
 function setIndications () {
    var mix = false;
    var track = false;
    var device = false;
+   var user = false;
    switch (KK.mode) {
       case 0:
          mix = true;
@@ -261,10 +271,14 @@ function setIndications () {
       case 2:
          device = true;
          break;
+      case 3:
+         user = true;
+         break;
    }
    for (var i = 0; i < 8; i++) {
       KK.tracks.getTrack(i).getVolume().setIndication(mix);
       KK.cDevice.getMacro(i).getAmount().setIndication(device);
+      KK.user.getControl(i).setIndication(user);
    }
    KK.cTrack.getVolume().setIndication(track);
    KK.cTrack.getPan().setIndication(track);
