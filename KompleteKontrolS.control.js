@@ -5,6 +5,7 @@ loadAPI(1);
 host.defineController("Native Instruments", "Komplete Kontrol S", "1.0", "c196a280-50a8-11e4-916c-0800200c9a66");
 host.defineMidiPorts(3, 3);
 host.addDeviceNameBasedDiscoveryPair(["Komplete Kontrol - 1", "Komplete Kontrol EXT - 1", "Komplete Kontrol DAW - 1"], ["Komplete Kontrol - 1", "Komplete Kontrol EXT - 1", "Komplete Kontrol DAW - 1"]);
+host.addDeviceNameBasedDiscoveryPair(["KOMPLETE KONTROL S25 Port 1", "KOMPLETE KONTROL S25 Port 1", "Komplete Kontrol DAW - 1"], ["KOMPLETE KONTROL S25 Port 1", "KOMPLETE KONTROL S25 Port 1", "Komplete Kontrol DAW - 1"]);
 
 var LOWEST_CC = 1;
 var HIGHEST_CC = 119;
