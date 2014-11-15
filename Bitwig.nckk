@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <ni-controller-midi-map port="internal" version="1">
 
-  <midi-map name="KompleteKontrolSBitwig" type="KompleteKontrol">
+  <midi-map name="Bitwig" type="KompleteKontrol">
     <wrapmode>0</wrapmode>
     <controls>
       <button id="ButtonArp">
